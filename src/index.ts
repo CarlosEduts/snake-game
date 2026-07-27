@@ -4,6 +4,11 @@ if (!canvas) throw new Error("[Error] Canvas not found");
 const ctx = canvas.getContext("2d");
 if (!ctx) throw new Error("[Error] Not is possible get 2D context");
 
+const score = document.querySelector(
+  ".game-status_points",
+) as HTMLParagraphElement | null;
+if (!score) throw new Error("[Error] Score not found");
+
 const gameConfigs = {
   velocity: 500,
   pixel: 20,
@@ -46,18 +51,22 @@ genFood();
 document.addEventListener("keydown", (key) => {
   switch (key.key) {
     case "a":
+    case "ArrowLeft":
       snake.direction = "left";
       break;
 
     case "w":
+    case "ArrowUp":
       snake.direction = "up";
       break;
 
     case "s":
+    case "ArrowDown":
       snake.direction = "down";
       break;
 
     case "d":
+    case "ArrowRight":
       snake.direction = "right";
       break;
 
@@ -73,10 +82,34 @@ document.addEventListener("keydown", (key) => {
 setInterval(() => {
   const lastHeadNode = snake.nodes[snake.nodes.length - 1]!; // Ultimo nó | Cabeça
 
+  // Verificar colisão entre as paredes do jogo
+  if (
+    lastHeadNode.x < 0 ||
+    lastHeadNode.y < 0 ||
+    lastHeadNode.x > gameConfigs.width - gameConfigs.pixel ||
+    lastHeadNode.y > gameConfigs.width - gameConfigs.pixel
+  ) {
+    console.error("Game Over");
+    snake.direction = "stopped";
+  }
+
+  // Verificar colisão entre a própria cobra
+  const newArr = [...snake.nodes];
+  newArr.pop();
+  if (snake.nodes.length != 4) {
+    for (const node of newArr) {
+      if (node.x == lastHeadNode.x && node.y == lastHeadNode.y) {
+        console.error("Game Over");
+        snake.direction = "stopped";
+      }
+    }
+  }
+
   if (lastHeadNode.x == food.x && lastHeadNode.y == food.y) {
     const firsNode = snake.nodes[0]!; // Primeiro nó | Cauda
     snake.nodes.unshift({ x: firsNode.x - gameConfigs.pixel, y: firsNode.y });
     genFood();
+    score.textContent = snake.nodes.length.toString();
   }
 
   switch (snake.direction) {
@@ -125,6 +158,7 @@ setInterval(() => {
 
   for (const node of snake.nodes) {
     ctx.fillStyle = "#5910e2";
+    ctx.strokeRect(node.x, node.y, gameConfigs.pixel, gameConfigs.pixel);
     ctx.fillRect(node.x, node.y, gameConfigs.pixel, gameConfigs.pixel);
   }
 
