@@ -10,7 +10,7 @@ const score = document.querySelector(
 if (!score) throw new Error("[Error] Score not found");
 
 const gameConfigs = {
-  velocity: 500,
+  velocity: 150,
   pixel: 20,
   width: 400,
   height: 400,
@@ -52,22 +52,30 @@ document.addEventListener("keydown", (key) => {
   switch (key.key) {
     case "a":
     case "ArrowLeft":
-      snake.direction = "left";
+      if (snake.direction != "right" || snake.nodes.length < 2) {
+        snake.direction = "left";
+      }
       break;
 
     case "w":
     case "ArrowUp":
-      snake.direction = "up";
+      if (snake.direction != "down" || snake.nodes.length < 2) {
+        snake.direction = "up";
+      }
       break;
 
     case "s":
     case "ArrowDown":
-      snake.direction = "down";
+      if (snake.direction != "up" || snake.nodes.length < 2) {
+        snake.direction = "down";
+      }
       break;
 
     case "d":
     case "ArrowRight":
-      snake.direction = "right";
+      if (snake.direction != "left" || snake.nodes.length < 2) {
+        snake.direction = "right";
+      }
       break;
 
     case "p":
@@ -80,7 +88,23 @@ document.addEventListener("keydown", (key) => {
 });
 
 setInterval(() => {
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   const lastHeadNode = snake.nodes[snake.nodes.length - 1]!; // Ultimo nó | Cabeça
+
+  // Verificar se o alimento foi capturado
+  if (lastHeadNode.x == food.x && lastHeadNode.y == food.y) {
+    const firsNode = snake.nodes[0]!; // Primeiro nó | Cauda
+    snake.nodes.unshift({ x: firsNode.x - gameConfigs.pixel, y: firsNode.y });
+    console.log("Food: ");
+
+    genFood();
+
+    ctx.fillStyle = "#e21010";
+    ctx.fillRect(food.x, food.y, gameConfigs.pixel, gameConfigs.pixel);
+    score.textContent = snake.nodes.length.toString();
+  }
 
   // Verificar colisão entre as paredes do jogo
   if (
@@ -103,13 +127,6 @@ setInterval(() => {
         snake.direction = "stopped";
       }
     }
-  }
-
-  if (lastHeadNode.x == food.x && lastHeadNode.y == food.y) {
-    const firsNode = snake.nodes[0]!; // Primeiro nó | Cauda
-    snake.nodes.unshift({ x: firsNode.x - gameConfigs.pixel, y: firsNode.y });
-    genFood();
-    score.textContent = snake.nodes.length.toString();
   }
 
   switch (snake.direction) {
@@ -150,9 +167,6 @@ setInterval(() => {
       break;
   }
 
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   ctx.fillStyle = "#e21010";
   ctx.fillRect(food.x, food.y, gameConfigs.pixel, gameConfigs.pixel);
 
@@ -162,5 +176,5 @@ setInterval(() => {
     ctx.fillRect(node.x, node.y, gameConfigs.pixel, gameConfigs.pixel);
   }
 
-  console.log(snake.nodes);
+  // console.log(snake.nodes);
 }, gameConfigs.velocity);
