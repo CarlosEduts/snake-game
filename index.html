@@ -1,24 +1,112 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snake Game</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Jogo da Cobrinha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./style/global.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="container in-game">
+      <header class="game-title">
+        <p class="game-title_eyebrow">Registro de campo Nº 004</p>
+        <h1 class="game-title_name">Jogo da Cobrinha</h1>
+      </header>
+
       <div class="game-status">
-        <p class="game-status_points"></p>
+        <p class="game-status_points">0</p>
+
+        <!-- Escamas como vida: 3. JS deve alternar a classe "is-lost" no(s) div(s)
+             conforme o jogador perde vidas (ordem: da esquerda para a direita). -->
+        <div class="game-status_lifes">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
 
       <div class="game">
+        <span class="game__tag">Nº 004 · <em>Colubridae domestica</em></span>
         <canvas
           class="game__canvas"
           width="400"
           height="400"
           id="canvas"
         ></canvas>
+      </div>
+
+      <!-- Controles do jogo (apenas mobile). Ordem: cima, esquerda, baixo, direita.
+           Cada botão expõe data-direction para o JS ligar o listener de input. -->
+      <div class="game-controls">
+        <div
+          class="game-controls_btn"
+          data-direction="up"
+          aria-label="Mover para cima"
+          role="button"
+        ></div>
+        <div
+          class="game-controls_btn"
+          data-direction="left"
+          aria-label="Mover para esquerda"
+          role="button"
+        ></div>
+        <div
+          class="game-controls_btn"
+          data-direction="down"
+          aria-label="Mover para baixo"
+          role="button"
+        ></div>
+        <div
+          class="game-controls_btn"
+          data-direction="right"
+          aria-label="Mover para direita"
+          role="button"
+        ></div>
+      </div>
+
+      <!-- Rodapé discreto: versão / criador / copyright / repositório -->
+      <footer>
+        <span>v1.0.0</span>
+        <span aria-hidden="true">·</span>
+        <span>Carlos Eduardo</span>
+        <span aria-hidden="true">·</span>
+        <span>&copy; 2026</span>
+        <span aria-hidden="true">·</span>
+        <a
+          href="https://github.com/CarlosEduts"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub</a
+        >
+      </footer>
+    </div>
+
+    <!-- Tela de game-over. JS deve adicionar a classe "is-visible" para exibi-la
+         e atualizar o texto de #finalScore com a pontuação obtida. -->
+    <div class="game-over">
+      <div class="game-over__card">
+        <p class="game-over__eyebrow">Espécime perdido</p>
+        <h2 class="game-over__title">Fim de jogo</h2>
+        <p class="game-over__message">
+          A cobra encontrou uma parede — ou a si mesma. Registre a tentativa e
+          volte ao terrário.
+        </p>
+        <div class="game-over__score">
+          <span>Pontuação final</span>
+          <strong id="finalScore">0</strong>
+        </div>
+        <button class="game-over__restart" id="restartButton" type="button">
+          Nova tentativa
+        </button>
       </div>
     </div>
 

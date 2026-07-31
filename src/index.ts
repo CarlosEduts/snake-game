@@ -1,3 +1,4 @@
+import GameCanvas from "./components/game-canva.js";
 import Food from "./model/food.js";
 import Snake from "./model/snake.js";
 import type { Bounds } from "./types/Bounds.js";
@@ -28,6 +29,7 @@ const bounds: Bounds = {
 
 const snake = new Snake();
 const food = new Food(bounds);
+const gameCanvas = new GameCanvas(canvas, gameConfigs.pixel);
 
 document.addEventListener("keydown", (key) => {
   switch (key.key) {
@@ -57,9 +59,6 @@ document.addEventListener("keydown", (key) => {
 });
 
 setInterval(() => {
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   const lastHeadNode = snake.getBody()[snake.bodyLength() - 1]!; // Ultimo nó | Cabeça
 
   // Verificar se o alimento foi capturado
@@ -78,20 +77,7 @@ setInterval(() => {
   }
 
   snake.advance(gameConfigs.pixel);
-
-  ctx.fillStyle = "#e21010";
-  ctx.fillRect(
-    food.coordinates.x,
-    food.coordinates.y,
-    gameConfigs.pixel,
-    gameConfigs.pixel,
-  );
-
-  for (const node of snake.getBody()) {
-    ctx.fillStyle = "#5910e2";
-    ctx.strokeRect(node.x, node.y, gameConfigs.pixel, gameConfigs.pixel);
-    ctx.fillRect(node.x, node.y, gameConfigs.pixel, gameConfigs.pixel);
-  }
+  gameCanvas.render([...snake.getBody()], food);
 
   // console.log(snake.nodes);
 }, gameConfigs.velocity);

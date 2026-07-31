@@ -1,20 +1,428 @@
-/* Global COnfigs */
+/* ==========================================================================
+   Jogo da Cobrinha — tema "Caderno de Campo"
+   A cobra tratada como um espécime catalogado: vitrine de vidro para o
+   canvas, escamas como indicadores de vida, etiqueta de espécime no canto.
+   ========================================================================== */
+
+:root {
+  /* Cor — 6 tokens nomeados */
+  --ink: #0f1a12;        /* fundo, verde-floresta quase preto */
+  --moss: #16241a;       /* superfície dos painéis */
+  --line: #2a3d2c;       /* linhas finas sobre o fundo escuro */
+  --fern: #5fa463;       /* verde principal — a cobra, vida ativa */
+  --fern-bright: #8fd08f;/* realce / foco / hover */
+  --amber: #d99a3d;      /* pontos, fruta, destaque quente */
+  --bone: #ede6d6;       /* texto principal */
+  --bone-dim: #a29c88;   /* texto secundário / legendas */
+  --rust: #c24b3d;       /* perigo, vida perdida, fim de jogo */
+
+  /* Tipografia */
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius-sm: 3px;
+  --radius-md: 8px;
+}
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-.container {
-  width: 100%;
-  height: 100dvh;
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 32px 16px;
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(95, 164, 99, 0.10) 1px, transparent 0);
+  background-size: 22px 22px;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--fern-bright);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------------------------------
+   Container
+   ------------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* -------------------------------------------------------------------------
+   Título
+   ------------------------------------------------------------------------- */
+
+.game-title {
+  width: 100%;
+  text-align: center;
+}
+
+.game-title_eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fern);
+}
+
+.game-title_name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+  color: var(--bone);
+}
+
+/* -------------------------------------------------------------------------
+   Status: pontos + vidas
+   ------------------------------------------------------------------------- */
+
+.game-status {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--moss);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.game-status_points {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--amber);
+}
+
+.game-status_points::before {
+  content: "PONTOS ";
+  color: var(--bone-dim);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.game-status_lifes {
+  display: flex;
+  gap: 6px;
+}
+
+/* Escamas: losangos que representam cada vida restante */
+.game-status_lifes div {
+  width: 12px;
+  height: 12px;
+  background: var(--fern);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.game-status_lifes div.is-lost {
+  background: transparent;
+  border: 1.5px solid var(--rust);
+}
+
+/* -------------------------------------------------------------------------
+   Vitrine do jogo
+   ------------------------------------------------------------------------- */
+
+.game {
+  position: relative;
+  width: 100%;
+  padding: 14px;
+  background: var(--moss);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+/* Cantoneiras — como marcações técnicas de um diagrama de campo */
+.game::before,
+.game::after,
+.game__canvas::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--fern);
+  opacity: 0.7;
+}
+
+.game::before {
+  top: 6px;
+  left: 6px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.game::after {
+  bottom: 6px;
+  right: 6px;
+  border-left: none;
+  border-top: none;
+}
+
+.game__tag {
+  position: absolute;
+  top: -11px;
+  right: 18px;
+  background: var(--ink);
+  border: 1px solid var(--fern);
+  color: var(--fern-bright);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.game__tag em {
+  font-style: italic;
+  color: var(--bone-dim);
 }
 
 .game__canvas {
-  background-color: #7171c24e;
-  border: 3px solid #7171c290;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: #0b140d;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+/* -------------------------------------------------------------------------
+   Controles (mobile)
+   ------------------------------------------------------------------------- */
+
+.game-controls {
+  display: none;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 4px;
+  display: none;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(2, 56px);
+  justify-content: center;
+  gap: 8px;
+}
+
+@media (max-width: 640px), (pointer: coarse) {
+  .game-controls {
+    display: grid;
+  }
+}
+
+.game-controls_btn {
+  background: var(--moss);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.game-controls_btn:active {
+  background: var(--fern);
+  border-color: var(--fern);
+}
+
+.game-controls_btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--bone);
+  border-right: 2px solid var(--bone);
+}
+
+.game-controls_btn[data-direction="up"] {
+  grid-column: 2;
+  grid-row: 1;
+}
+.game-controls_btn[data-direction="up"]::before {
+  transform: translate(-50%, -30%) rotate(-45deg);
+}
+
+.game-controls_btn[data-direction="left"] {
+  grid-column: 1;
+  grid-row: 2;
+}
+.game-controls_btn[data-direction="left"]::before {
+  transform: translate(-30%, -50%) rotate(-135deg);
+}
+
+.game-controls_btn[data-direction="down"] {
+  grid-column: 2;
+  grid-row: 2;
+}
+.game-controls_btn[data-direction="down"]::before {
+  transform: translate(-50%, -70%) rotate(135deg);
+}
+
+.game-controls_btn[data-direction="right"] {
+  grid-column: 3;
+  grid-row: 2;
+}
+.game-controls_btn[data-direction="right"]::before {
+  transform: translate(-70%, -50%) rotate(45deg);
+}
+
+/* -------------------------------------------------------------------------
+   Rodapé — discreto, sem destaque
+   ------------------------------------------------------------------------- */
+
+footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--bone-dim);
+  opacity: 0.7;
+}
+
+footer a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   Tela de fim de jogo
+   ------------------------------------------------------------------------- */
+
+.game-over {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 26, 18, 0.88);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.game-over.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.game-over__card {
+  width: 100%;
+  max-width: 340px;
+  background: var(--moss);
+  border: 1px solid var(--rust);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.game-over__eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.game-over__title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 30px;
+  color: var(--bone);
+}
+
+.game-over__message {
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--bone-dim);
+}
+
+.game-over__score {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 10px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.game-over__score span {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--bone-dim);
+}
+
+.game-over__score strong {
+  font-size: 20px;
+  color: var(--amber);
+}
+
+.game-over__restart {
+  width: 100%;
+  padding: 12px;
+  background: var(--fern);
+  color: var(--ink);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.game-over__restart:hover {
+  background: var(--fern-bright);
 }
