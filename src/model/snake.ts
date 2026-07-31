@@ -1,12 +1,8 @@
+import { type Bounds } from "../types/Bounds.js";
+
 type Direction = "up" | "down" | "left" | "right" | "stopped";
 
 type Node = { x: number; y: number };
-
-type Bounds = {
-  width: number;
-  height: number;
-  pixelSize: number;
-};
 
 type Delta = { dx: number; dy: number };
 
@@ -28,7 +24,7 @@ const DIRECTION_DELTA: Partial<Record<Direction, Delta>> = {
 
 // Cabeça: Último nó
 // Cauda: Primeiro nó
-export class Snake {
+export default class Snake {
   private direction: Direction;
   private body: Array<Node>;
 

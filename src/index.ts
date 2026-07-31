@@ -1,4 +1,6 @@
-import { Snake } from "./model/snake.js";
+import Food from "./model/food.js";
+import Snake from "./model/snake.js";
+import type { Bounds } from "./types/Bounds.js";
 
 const canvas = document.querySelector("#canvas") as HTMLCanvasElement | null;
 if (!canvas) throw new Error("[Error] Canvas not found");
@@ -11,8 +13,6 @@ const score = document.querySelector(
 ) as HTMLParagraphElement | null;
 if (!score) throw new Error("[Error] Score not found");
 
-const snake = new Snake();
-
 const gameConfigs = {
   velocity: 150,
   pixel: 20,
@@ -20,22 +20,14 @@ const gameConfigs = {
   height: 400,
 };
 
-const food: {
-  x: number;
-  y: number;
-} = {
-  x: 0,
-  y: 0,
+const bounds: Bounds = {
+  width: gameConfigs.width,
+  height: gameConfigs.height,
+  pixelSize: gameConfigs.pixel,
 };
 
-const genFood = () => {
-  const max = gameConfigs.width / gameConfigs.pixel;
-  food.x = Math.floor(Math.random() * (max + 1)) * gameConfigs.pixel;
-  food.y = Math.floor(Math.random() * (max + 1)) * gameConfigs.pixel;
-
-  console.log(food);
-};
-genFood();
+const snake = new Snake();
+const food = new Food(bounds);
 
 document.addEventListener("keydown", (key) => {
   switch (key.key) {
@@ -71,26 +63,16 @@ setInterval(() => {
   const lastHeadNode = snake.getBody()[snake.bodyLength() - 1]!; // Ultimo nó | Cabeça
 
   // Verificar se o alimento foi capturado
-  if (lastHeadNode.x == food.x && lastHeadNode.y == food.y) {
-    const firsNode = snake.getBody()[0]!; // Primeiro nó | Cauda
+  if (
+    lastHeadNode.x == food.coordinates.x &&
+    lastHeadNode.y == food.coordinates.y
+  ) {
     snake.advance(gameConfigs.pixel, true);
-    console.log("Food: ");
-
-    genFood();
-
-    ctx.fillStyle = "#e21010";
-    ctx.fillRect(food.x, food.y, gameConfigs.pixel, gameConfigs.pixel);
+    food.respawn(bounds);
     score.textContent = snake.bodyLength().toString();
   }
 
-  if (
-    snake.checkWallCollision({
-      width: gameConfigs.width,
-      height: gameConfigs.height,
-      pixelSize: gameConfigs.pixel,
-    }) ||
-    snake.checkSnakesOwnCollision()
-  ) {
+  if (snake.checkWallCollision(bounds) || snake.checkSnakesOwnCollision()) {
     console.error("Game Over");
     snake.setDirection("stopped");
   }
@@ -98,7 +80,12 @@ setInterval(() => {
   snake.advance(gameConfigs.pixel);
 
   ctx.fillStyle = "#e21010";
-  ctx.fillRect(food.x, food.y, gameConfigs.pixel, gameConfigs.pixel);
+  ctx.fillRect(
+    food.coordinates.x,
+    food.coordinates.y,
+    gameConfigs.pixel,
+    gameConfigs.pixel,
+  );
 
   for (const node of snake.getBody()) {
     ctx.fillStyle = "#5910e2";
