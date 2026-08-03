@@ -1,24 +1,17 @@
-/* ==========================================================================
-   Jogo da Cobrinha — tema "Caderno de Campo"
-   A cobra tratada como um espécime catalogado: vitrine de vidro para o
-   canvas, escamas como indicadores de vida, etiqueta de espécime no canto.
-   ========================================================================== */
-
 :root {
-  /* Cor — 6 tokens nomeados */
-  --ink: #0f1a12;        /* fundo, verde-floresta quase preto */
-  --moss: #16241a;       /* superfície dos painéis */
-  --line: #2a3d2c;       /* linhas finas sobre o fundo escuro */
-  --fern: #5fa463;       /* verde principal — a cobra, vida ativa */
-  --fern-bright: #8fd08f;/* realce / foco / hover */
-  --amber: #d99a3d;      /* pontos, fruta, destaque quente */
-  --bone: #ede6d6;       /* texto principal */
-  --bone-dim: #a29c88;   /* texto secundário / legendas */
-  --rust: #c24b3d;       /* perigo, vida perdida, fim de jogo */
+  --ink: #0f1a12; /* fundo, verde-floresta quase preto */
+  --moss: #16241a; /* superfície dos painéis */
+  --line: #2a3d2c; /* linhas finas sobre o fundo escuro */
+  --fern: #5fa463; /* verde principal — a cobra, vida ativa */
+  --fern-bright: #8fd08f; /* realce / foco / hover */
+  --amber: #d99a3d; /* pontos, fruta, destaque quente */
+  --bone: #ede6d6; /* texto principal */
+  --bone-dim: #a29c88; /* texto secundário / legendas */
+  --rust: #8deda8; /* perigo, vida perdida, fim de jogo */
 
-  /* Tipografia */
   --font-display: "Fraunces", "Iowan Old Style", serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --radius-sm: 3px;
   --radius-md: 8px;
@@ -41,8 +34,11 @@ body {
   justify-content: center;
   padding: 32px 16px;
   background-color: var(--ink);
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(95, 164, 99, 0.10) 1px, transparent 0);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(95, 164, 99, 0.1) 1px,
+    transparent 0
+  );
   background-size: 22px 22px;
   color: var(--bone);
   font-family: var(--font-mono);
@@ -118,7 +114,7 @@ button {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 10px 16px;
   background: var(--moss);
   border: 1px solid var(--line);
@@ -138,26 +134,6 @@ button {
   color: var(--bone-dim);
   font-size: 11px;
   letter-spacing: 0.12em;
-}
-
-.game-status_lifes {
-  display: flex;
-  gap: 6px;
-}
-
-/* Escamas: losangos que representam cada vida restante */
-.game-status_lifes div {
-  width: 12px;
-  height: 12px;
-  background: var(--fern);
-  transform: rotate(45deg);
-  border-radius: 2px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.game-status_lifes div.is-lost {
-  background: transparent;
-  border: 1.5px solid var(--rust);
 }
 
 /* -------------------------------------------------------------------------
@@ -257,7 +233,9 @@ button {
   position: relative;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .game-controls_btn:active {
@@ -339,9 +317,7 @@ footer a {
   padding: 16px;
   background: rgba(15, 26, 18, 0.88);
   backdrop-filter: blur(2px);
-  opacity: 0;
   visibility: hidden;
-  pointer-events: none;
   transition: opacity 0.2s ease;
 }
 

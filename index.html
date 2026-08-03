@@ -18,24 +18,15 @@
   <body>
     <div class="container in-game">
       <header class="game-title">
-        <p class="game-title_eyebrow">Registro de campo Nº 004</p>
+        <p class="game-title_eyebrow">Registro de campo Nº 001</p>
         <h1 class="game-title_name">Jogo da Cobrinha</h1>
       </header>
 
       <div class="game-status">
-        <p class="game-status_points">0</p>
-
-        <!-- Escamas como vida: 3. JS deve alternar a classe "is-lost" no(s) div(s)
-             conforme o jogador perde vidas (ordem: da esquerda para a direita). -->
-        <div class="game-status_lifes">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <p class="game-status_points">1</p>
       </div>
 
       <div class="game">
-        <span class="game__tag">Nº 004 · <em>Colubridae domestica</em></span>
         <canvas
           class="game__canvas"
           width="400"
@@ -44,8 +35,7 @@
         ></canvas>
       </div>
 
-      <!-- Controles do jogo (apenas mobile). Ordem: cima, esquerda, baixo, direita.
-           Cada botão expõe data-direction para o JS ligar o listener de input. -->
+      <!-- Controles do jogo (apenas mobile) -->
       <div class="game-controls">
         <div
           class="game-controls_btn"
@@ -73,16 +63,15 @@
         ></div>
       </div>
 
-      <!-- Rodapé discreto: versão / criador / copyright / repositório -->
       <footer>
         <span>v1.0.0</span>
         <span aria-hidden="true">·</span>
-        <span>Carlos Eduardo</span>
+        <span>Carlos Trindade</span>
         <span aria-hidden="true">·</span>
         <span>&copy; 2026</span>
         <span aria-hidden="true">·</span>
         <a
-          href="https://github.com/CarlosEduts"
+          href="https://github.com/CarlosEduts/snake-game"
           target="_blank"
           rel="noopener noreferrer"
           >GitHub</a
@@ -90,19 +79,15 @@
       </footer>
     </div>
 
-    <!-- Tela de game-over. JS deve adicionar a classe "is-visible" para exibi-la
-         e atualizar o texto de #finalScore com a pontuação obtida. -->
+    <!-- Tela de game-over -->
     <div class="game-over">
       <div class="game-over__card">
         <p class="game-over__eyebrow">Espécime perdido</p>
         <h2 class="game-over__title">Fim de jogo</h2>
-        <p class="game-over__message">
-          A cobra encontrou uma parede — ou a si mesma. Registre a tentativa e
-          volte ao terrário.
-        </p>
+        <p class="game-over__message"></p>
         <div class="game-over__score">
           <span>Pontuação final</span>
-          <strong id="finalScore">0</strong>
+          <strong id="finalScore">1</strong>
         </div>
         <button class="game-over__restart" id="restartButton" type="button">
           Nova tentativa
@@ -110,6 +95,6 @@
       </div>
     </div>
 
-    <script type="module" src="./build/index.js"></script>
+    <script type="module" src="./build/main.js"></script>
   </body>
 </html>

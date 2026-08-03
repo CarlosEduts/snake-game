@@ -1,9 +1,5 @@
 import { type Bounds } from "../types/Bounds.js";
-
-export type Coordinates = {
-  x: number;
-  y: number;
-};
+import { type Coordinates } from "../types/Coordinates.js";
 
 export default class Food {
   private position: Coordinates;

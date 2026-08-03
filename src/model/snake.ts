@@ -31,6 +31,7 @@ export default class Snake {
   constructor() {
     this.direction = "stopped";
     this.body = [{ x: 0, y: 0 }];
+    console.log(Snake);
   }
 
   public getDirection(): Direction {
@@ -77,7 +78,7 @@ export default class Snake {
     }
   }
 
-  public checkWallCollision(bounds: Bounds): boolean {
+  public isCollidingWithWall(bounds: Bounds): boolean {
     const head = this.getHead();
 
     return (
@@ -88,7 +89,7 @@ export default class Snake {
     );
   }
 
-  public checkSnakesOwnCollision(): boolean {
+  public isCollidingWithSelf(): boolean {
     if (this.bodyLength() < MIN_LENGTH_FOR_SELF_COLLISION) {
       return false;
     }
@@ -103,6 +104,17 @@ export default class Snake {
 
   private addHead(node: Node): void {
     this.body.push(node);
+  }
+
+  public peekNextHead(pixelSize: number): Node | null {
+    const delta = DIRECTION_DELTA[this.direction];
+    if (!delta) return null;
+
+    const head = this.getHead();
+    return {
+      x: head.x + delta.dx * pixelSize,
+      y: head.y + delta.dy * pixelSize,
+    };
   }
 
   private removeTail(): void {
